@@ -15,17 +15,25 @@ import time
 from time import sleep
 
 
-# def waiting_func(by_variable, attribute):
-#     try:
-#         WebDriverWait(self.driver, 10).until(lambda x: x.find_element(by=by_variable,  value=attribute))
-#     except (NoSuchElementException, TimeoutException):
-#         print('{} {} not found'.format(by_variable, attribute))
-#         exit()
+
 #TODO Implement wait instead of sleep()
 #TODO Devide into methods for more readeable codee
-
+#TODO check how we found click in other file and implemet that on the toLike method
 
 class InstaBot:
+    
+    def getLikeButtonByArticleElement(self, articleElement):
+        return articleElement.find_element_by_xpath("//span[contains(@class, 'fr66n')]//button")
+    
+    def getUsernameByArticleElement(self, articleElement):
+        usernameElement = articleElement.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
+        return usernameElement.get_attribute("title")
+    
+    def toLike(self, articleElement, usersToLike):
+        if self.getUsernameByArticleElement(articleElement) in usersToLike:
+            return True
+        return False
+
     def __init__(self, us, pw):#takes the username and password of the user as parameters
         NO_POSTS_TO_LIKE = 20 #the number of top posts of the feed that we will look through
         CheckTheList = False #determines if we look at specific usernames or all the posts
@@ -34,7 +42,7 @@ class InstaBot:
         width, height = pyautogui.size()
         self.driver = webdriver.Chrome()
         liked = 0
-        postsToLike = ["euroleague", "nba", "bleacherreport", "overtime"]
+        users = ["euroleague", "nba", "bleacherreport", "overtime"]
 
         
         self.driver.get("https://www.instagram.com/")
@@ -55,48 +63,26 @@ class InstaBot:
         path = []
         SCROLL_PAUSE_TIME = 1
 
-        # Get scroll height
         article_path = []
         path = []
         uniqueElementsFound = []
-        while len(uniqueElementsFound) < 20:
-            # Scroll down to bottom
-            
-        #WORKS
+        while len(uniqueElementsFound) < NO_POSTS_TO_LIKE:
             # Wait to load page
             time.sleep(SCROLL_PAUSE_TIME)
-            
             article_path = self.driver.find_elements_by_xpath("//*[contains(@class, 'L_LMM SgTZ1')]")
             for article in article_path:
                 if article not in uniqueElementsFound:
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
                     username = usernameElement.get_attribute("title")
+                    print(username)
+                    if self.toLike(article, users):
+                        likeBtn = self.getLikeButtonByArticleElement(article)
+                        likeBtn.click()
                     path.append(username)
-
-            # for article in article_path:
-            #     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
-            #     username = usernameElement.get_attribute("title")
-            #     path.append(username)
             lastElement = article_path[-1]
             self.driver.execute_script("arguments[0].scrollIntoView(true);", lastElement)
-            
-            
-            #find a good way to scroll
-            # body = self.driver.find_element_by_css_selector('body')
-            # body.send_keys(Keys.PAGE_DOWN)
-
-            # Calculate new scroll height and compare with last scroll height
-
-
-            
+        
         for i in path:
             print(i)
-                #this for loop goes through the posts and likes posts of accounts not in the blocked list
-        
 
-
-
-
-
-#/html/body/div[1]/section/main/section/div[1]/div[1]/div/article[5]/header/div[2]/div[1]/div/h2/a
