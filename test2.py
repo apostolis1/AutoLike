@@ -1,6 +1,3 @@
-
-
-
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import pyautogui
@@ -23,7 +20,7 @@ from time import sleep
 class InstaBot:
     
     def getLikeButtonByArticleElement(self, articleElement):
-        return articleElement.find_element_by_xpath("//span[contains(@class, 'fr66n')]//button")
+        return articleElement.find_element_by_xpath(".//span[contains(@class, 'fr66n')]//button")
     
     def getUsernameByArticleElement(self, articleElement):
         usernameElement = articleElement.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
@@ -33,9 +30,15 @@ class InstaBot:
         if self.getUsernameByArticleElement(articleElement) in usersToLike:
             return True
         return False
-
+    
+    def isAlreadyLiked(self, likeBtn):
+        if likeBtn.find_element_by_xpath("./*[name()='svg']").get_attribute("aria-label") == "Liked":
+            print("Already Liked")
+            return True
+        return False
+    
     def __init__(self, us, pw):#takes the username and password of the user as parameters
-        NO_POSTS_TO_LIKE = 20 #the number of top posts of the feed that we will look through
+        NO_POSTS_TO_LIKE = 5 #the number of top posts of the feed that we will look through
         CheckTheList = False #determines if we look at specific usernames or all the posts
         self.password = pw
         self.username = us
@@ -53,7 +56,7 @@ class InstaBot:
         self.driver.find_element_by_name("username").send_keys(self.username)
         self.driver.find_element_by_name("password").send_keys(self.password)
         self.driver.find_element_by_xpath('//button[@type="submit"]').click()
-        sleep(3)
+        sleep(4)
         self.driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(1)
         sleep(2)
@@ -71,18 +74,24 @@ class InstaBot:
             time.sleep(SCROLL_PAUSE_TIME)
             article_path = self.driver.find_elements_by_xpath("//*[contains(@class, 'L_LMM SgTZ1')]")
             for article in article_path:
-                if article not in uniqueElementsFound:
+                if article not in uniqueElementsFound and len(uniqueElementsFound) < NO_POSTS_TO_LIKE:
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
                     username = usernameElement.get_attribute("title")
                     print(username)
-                    if self.toLike(article, users):
-                        likeBtn = self.getLikeButtonByArticleElement(article)
-                        likeBtn.click()
+                    # if self.toLike(article, users):
+                    likeBtn = self.getLikeButtonByArticleElement(article)
+                    print(likeBtn)
+                    self.driver.execute_script("arguments[0].scrollIntoView(true);", likeBtn)
+                    # time.sleep(4)
+                    self.driver.execute_script("window.scrollBy(0,-200);")
+                    time.sleep(0.5)
+                    # if not self.isAlreadyLiked(likeBtn):
+                    likeBtn.click()
+                    print("liked post by", username)
+                    # else:
+                    #     print("You already liked a post by", username)
                     path.append(username)
             lastElement = article_path[-1]
             self.driver.execute_script("arguments[0].scrollIntoView(true);", lastElement)
-        
-        for i in path:
-            print(i)
 
