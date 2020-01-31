@@ -31,11 +31,12 @@ class InstaBot:
             return True
         return False
     
+
     def getLikeCondition(self, likebutton):
         return likebutton.find_element_by_xpath("./*[name()='svg']").get_attribute("aria-label")
 
     def __init__(self, us, pw):#takes the username and password of the user as parameters
-        NO_POSTS_TO_LIKE = 20 #the number of top posts of the feed that we will look through
+        NO_POSTS_TO_LIKE = 5 #the number of top posts of the feed that we will look through
         CheckTheList = False #determines if we look at specific usernames or all the posts
         self.password = pw
         self.username = us
@@ -53,7 +54,7 @@ class InstaBot:
         self.driver.find_element_by_name("username").send_keys(self.username)
         self.driver.find_element_by_name("password").send_keys(self.password)
         self.driver.find_element_by_xpath('//button[@type="submit"]').click()
-        sleep(3)
+        sleep(4)
         self.driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(1)
         sleep(2)
@@ -71,6 +72,7 @@ class InstaBot:
             time.sleep(SCROLL_PAUSE_TIME)
             article_path = self.driver.find_elements_by_xpath("//*[contains(@class, 'L_LMM SgTZ1')]")
             for article in article_path:
+
                 if article not in uniqueElementsFound and len(uniqueElementsFound) < NO_POSTS_TO_LIKE: #The article is not already checked and the limit hasnt been exceeded
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
@@ -83,3 +85,4 @@ class InstaBot:
                             likeBtn.click()
                         print(username, self.getLikeCondition(likeBtn))
                     path.append(username)
+
