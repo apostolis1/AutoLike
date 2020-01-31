@@ -42,7 +42,6 @@ class InstaBot:
         self.username = us
         width, height = pyautogui.size()
         self.driver = webdriver.Chrome()
-        liked = 0
         users = ["euroleague", "nba", "bleacherreport", "overtime"]
 
         
@@ -58,7 +57,6 @@ class InstaBot:
         self.driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
         sleep(1)
         sleep(2)
-        i = 0
         sleep(2)
         #logged in and on the main page
         path = []
