@@ -33,6 +33,9 @@ class InstaBot:
         if self.getUsernameByArticleElement(articleElement) in usersToLike:
             return True
         return False
+    
+    def getLikeCondition(self, likebutton):
+        return likebutton.find_element_by_xpath("./*[name()='svg']").get_attribute("aria-label")
 
     def __init__(self, us, pw):#takes the username and password of the user as parameters
         NO_POSTS_TO_LIKE = 20 #the number of top posts of the feed that we will look through
@@ -71,19 +74,15 @@ class InstaBot:
             time.sleep(SCROLL_PAUSE_TIME)
             article_path = self.driver.find_elements_by_xpath("//*[contains(@class, 'L_LMM SgTZ1')]")
             for article in article_path:
-                sleep(1)
-                if article not in uniqueElementsFound and len(uniqueElementsFound) < NO_POSTS_TO_LIKE:
+                if article not in uniqueElementsFound and len(uniqueElementsFound) < NO_POSTS_TO_LIKE: #The article is not already checked and the limit hasnt been exceeded
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
                     username = usernameElement.get_attribute("title")
                     if True or self.toLike(article, users):
                         likeBtn = self.getLikeButtonByArticleElement(article)
-                        likeBtnCondition = likeBtn.find_element_by_xpath("./*[name()='svg']").get_attribute("aria-label")
                         self.driver.execute_script("arguments[0].scrollIntoView(true);", likeBtn)
                         self.driver.execute_script("window.scrollBy(0,-200);")
-                        if likeBtnCondition == "Like":
+                        if self.getLikeCondition(likeBtn) == "Like":
                             likeBtn.click()
-                        print(username, likeBtnCondition)
+                        print(username, self.getLikeCondition(likeBtn))
                     path.append(username)
-
-mybot = InstaBot("apostolis.stamatis1@gmail.com", "1532000!@#")
