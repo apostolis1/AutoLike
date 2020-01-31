@@ -23,7 +23,7 @@ from time import sleep
 class InstaBot:
     
     def getLikeButtonByArticleElement(self, articleElement):
-        return articleElement.find_element_by_xpath("//span[contains(@class, 'fr66n')]//button")
+        return articleElement.find_element_by_xpath(".//span[contains(@class, 'fr66n')]//button")
     
     def getUsernameByArticleElement(self, articleElement):
         usernameElement = articleElement.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
@@ -71,18 +71,19 @@ class InstaBot:
             time.sleep(SCROLL_PAUSE_TIME)
             article_path = self.driver.find_elements_by_xpath("//*[contains(@class, 'L_LMM SgTZ1')]")
             for article in article_path:
-                if article not in uniqueElementsFound:
+                sleep(1)
+                if article not in uniqueElementsFound and len(uniqueElementsFound) < NO_POSTS_TO_LIKE:
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
                     username = usernameElement.get_attribute("title")
-                    print(username)
-                    if self.toLike(article, users):
+                    if True or self.toLike(article, users):
                         likeBtn = self.getLikeButtonByArticleElement(article)
-                        likeBtn.click()
+                        likeBtnCondition = likeBtn.find_element_by_xpath("./*[name()='svg']").get_attribute("aria-label")
+                        self.driver.execute_script("arguments[0].scrollIntoView(true);", likeBtn)
+                        self.driver.execute_script("window.scrollBy(0,-200);")
+                        if likeBtnCondition == "Like":
+                            likeBtn.click()
+                        print(username, likeBtnCondition)
                     path.append(username)
-            lastElement = article_path[-1]
-            self.driver.execute_script("arguments[0].scrollIntoView(true);", lastElement)
-        
-        for i in path:
-            print(i)
 
+mybot = InstaBot("apostolis.stamatis1@gmail.com", "1532000!@#")
