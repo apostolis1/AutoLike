@@ -63,7 +63,6 @@ class InstaBot:
         SCROLL_PAUSE_TIME = 1
 
         article_path = []
-        path = []
         uniqueElementsFound = []
         while len(uniqueElementsFound) < NO_POSTS_TO_LIKE:
             # Wait to load page
@@ -75,12 +74,12 @@ class InstaBot:
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
                     username = usernameElement.get_attribute("title")
-                    if True or self.toLike(article, users):
+                    if not True or self.toLike(article, users):
                         likeBtn = self.getLikeButtonByArticleElement(article)
                         self.driver.execute_script("arguments[0].scrollIntoView(true);", likeBtn)
                         self.driver.execute_script("window.scrollBy(0,-200);")
                         if self.getLikeCondition(likeBtn) == "Like":
                             likeBtn.click()
                         print(username, self.getLikeCondition(likeBtn))
-                    path.append(username)
+
 
