@@ -26,30 +26,31 @@ class InstaBot:
         usernameElement = articleElement.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
         return usernameElement.get_attribute("title")
     
-    def toLike(self, articleElement, usersToLike):
-        if self.getUsernameByArticleElement(articleElement) in usersToLike:
+    def toLike(self, userName, usersToLike):
+        if userName in usersToLike:
             return True
         return False
-    
+
+    def addUser(self, user):
+        self.usersToLike.append(user)    
 
     def getLikeCondition(self, likebutton):
-        return likebutton.find_element_by_xpath("./*[name()='svg']").get_attribute("aria-label")
+        return likebutton.find_element_by_xpath(".//*[name()='svg']").get_attribute("aria-label")
 
     def __init__(self, us, pw):#takes the username and password of the user as parameters
-        NO_POSTS_TO_LIKE = 5 #the number of top posts of the feed that we will look through
-        CheckTheList = False #determines if we look at specific usernames or all the posts
+        NO_POSTS_TO_LIKE = 20 #the number of top posts of the feed that we will look through
+        CheckTheList = True #determines if we look at specific usernames or all the posts
         self.password = pw
         self.username = us
         width, height = pyautogui.size()
         self.driver = webdriver.Chrome()
-        users = ["euroleague", "nba", "bleacherreport", "overtime"]
+        self.usersToLike = []
+        for i in ["euroleague", "nba", "bleacherreport", "overtime"]:
+            self.addUser(i)
 
         
-        self.driver.get("https://www.instagram.com/")
+        self.driver .get("https://www.instagram.com/accounts/login/?source=auth_switcher")
         self.driver.set_window_size(width, height)#Fullsize window
-        sleep(2)
-        self.driver.find_element_by_xpath("//a[contains(text(), 'Log in')]").click()
-        sleep(1.5)
         self.driver.find_element_by_name("username").send_keys(self.username)
         self.driver.find_element_by_name("password").send_keys(self.password)
         self.driver.find_element_by_xpath('//button[@type="submit"]').click()
@@ -59,9 +60,8 @@ class InstaBot:
         sleep(2)
         sleep(2)
         #logged in and on the main page
-        path = []
-        SCROLL_PAUSE_TIME = 1
-
+        SCROLL_PAUSE_TIME = 0.5
+        likedPosts = 0
         article_path = []
         uniqueElementsFound = []
         while len(uniqueElementsFound) < NO_POSTS_TO_LIKE:
@@ -73,13 +73,14 @@ class InstaBot:
                 if article not in uniqueElementsFound and len(uniqueElementsFound) < NO_POSTS_TO_LIKE: #The article is not already checked and the limit hasnt been exceeded
                     uniqueElementsFound.append(article)
                     usernameElement = article.find_element_by_xpath(".//*[contains(@class, 'FPmhX')]")
+                    likeBtn = self.getLikeButtonByArticleElement(article)
+                    self.driver.execute_script("arguments[0].scrollIntoView(true);", likeBtn)
+                    self.driver.execute_script("window.scrollBy(0,-200);")
                     username = usernameElement.get_attribute("title")
-                    if not True or self.toLike(article, users):
-                        likeBtn = self.getLikeButtonByArticleElement(article)
-                        self.driver.execute_script("arguments[0].scrollIntoView(true);", likeBtn)
-                        self.driver.execute_script("window.scrollBy(0,-200);")
+                    if not CheckTheList or self.toLike(username, self.usersToLike):
                         if self.getLikeCondition(likeBtn) == "Like":
                             likeBtn.click()
-                        print(username, self.getLikeCondition(likeBtn))
-
+                            likedPosts += 1
+                            print("Liked one photo from", username)
+        print("Proccess terminated succesfully. Liked" , likedPosts, "posts")
 
