@@ -83,3 +83,5 @@ class InstaBot:
                             likedPosts += 1
                             print("Liked one photo from", username)
         print("Proccess terminated succesfully. Liked" , likedPosts, "posts")
+
+print("test")
