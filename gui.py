@@ -1,6 +1,12 @@
 import tkinter as tk
-import tkinter.messagebox
 import bot
+import os
+
+
+def addUser():
+    accountsList.insert(tk.END, accountEntry.get())   
+    accountEntry.delete(first=0, last=tk.END)
+
 
 def Login():
     password = pwEntry.get()
@@ -12,7 +18,7 @@ def Login():
 root = tk.Tk()
 
 #Creating and placing the login grid
-LoginInterface = tk.Frame(root)
+LoginInterface = tk.Frame(root, bg = "black")
 userEntry = tk.Entry(LoginInterface)
 pwEntry = tk.Entry(LoginInterface)
 nmbrOfPostsEntry= tk.Entry(LoginInterface)
@@ -24,10 +30,22 @@ pwEntry.grid(row = 1, column = 1)
 nmbrOfPostsEntry.grid(row = 2, column = 1)
 loginBtn = tk.Button(LoginInterface, text = "Go", command = Login)
 loginBtn.grid(row = 3, column = 1)
-LoginInterface.pack()
 
+#Accounts to like interface
+AccountsToLikeInterface = tk.Frame(root, bg = "blue")
+accountsList = tk.Listbox(AccountsToLikeInterface)
+accountsList.grid(row = 0, column = 0)
+accountEntry = tk.Entry(AccountsToLikeInterface, bg = "blue")
+accountEntry.grid(row = 1, column = 0)
+addBtn = tk.Button(AccountsToLikeInterface, text = "Add", command = addUser)
+addBtn.grid(row = 1, column = 1)
+root.update_idletasks()
+
+#TODO add a file to save the list of users
+
+LoginInterface.place(height = 100, width = 400, x = 0, y = 0)
+root.update_idletasks()
+AccountsToLikeInterface.place(x = 0, y = LoginInterface.winfo_height())
 root.minsize(400,400)
-
-
 root.mainloop()
 
