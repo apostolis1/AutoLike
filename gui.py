@@ -1,10 +1,14 @@
 import tkinter as tk
+import tkinter.messagebox
 import bot
 import os
-
+import string
 
 def addUser():
-    accountsList.insert(tk.END, accountEntry.get())   
+    temp = accountEntry.get()
+    temp = temp.strip()
+    if temp != "":
+        accountsList.insert(tk.END, temp)   
     accountEntry.delete(first=0, last=tk.END)
 
 
@@ -12,13 +16,16 @@ def Login():
     password = pwEntry.get()
     username = userEntry.get()
     postNumber = nmbrOfPostsEntry.get()
+    if password == "" or username == "" or postNumber == "":
+        tk.messagebox.showerror("Error", "Please provide all the required information")
+        return
     mybot = bot.InstaBot(username, password, postNumber)
     print(username, password)
 
 root = tk.Tk()
 
 #Creating and placing the login grid
-LoginInterface = tk.Frame(root, bg = "black")
+LoginInterface = tk.Frame(root)
 userEntry = tk.Entry(LoginInterface)
 pwEntry = tk.Entry(LoginInterface)
 nmbrOfPostsEntry= tk.Entry(LoginInterface)
@@ -32,10 +39,10 @@ loginBtn = tk.Button(LoginInterface, text = "Go", command = Login)
 loginBtn.grid(row = 3, column = 1)
 
 #Accounts to like interface
-AccountsToLikeInterface = tk.Frame(root, bg = "blue")
+AccountsToLikeInterface = tk.Frame(root)
 accountsList = tk.Listbox(AccountsToLikeInterface)
 accountsList.grid(row = 0, column = 0)
-accountEntry = tk.Entry(AccountsToLikeInterface, bg = "blue")
+accountEntry = tk.Entry(AccountsToLikeInterface)
 accountEntry.grid(row = 1, column = 0)
 addBtn = tk.Button(AccountsToLikeInterface, text = "Add", command = addUser)
 addBtn.grid(row = 1, column = 1)
