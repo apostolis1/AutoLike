@@ -37,8 +37,8 @@ class InstaBot:
     def getLikeCondition(self, likebutton):
         return likebutton.find_element_by_xpath(".//*[name()='svg']").get_attribute("aria-label")
 
-    def __init__(self, us, pw):#takes the username and password of the user as parameters
-        NO_POSTS_TO_LIKE = 20 #the number of top posts of the feed that we will look through
+    def __init__(self, us, pw, posts):#takes the username and password of the user as parameters
+        NO_POSTS_TO_LIKE = posts #the number of top posts of the feed that we will look through
         CheckTheList = True #determines if we look at specific usernames or all the posts
         self.password = pw
         self.username = us
