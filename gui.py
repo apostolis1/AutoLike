@@ -7,10 +7,11 @@ import string
 #TODO add delete button for item in list
 
 myUSERS = []
+toCheck = False #determines if the bot only likes posts from the users list
 
-def loadList():#called in the initlization to load the users from the save.txt file
-    if os.path.isfile("save.txt"):
-        with open("save.txt", "r") as f:
+def loadList(): #called in the initlization to load the users from the users.txt file
+    if os.path.isfile("users.txt"):
+        with open("users.txt", "r") as f:
             tempUsers = f.read()
         global myUSERS
         myUSERS = tempUsers.split(',')
@@ -20,7 +21,7 @@ def loadList():#called in the initlization to load the users from the save.txt f
 
 def updateList():
     print(myUSERS)
-    with open("save.txt", "w") as f:
+    with open("users.txt", "w") as f:
         for user in myUSERS:
             f.write(user + ',')
 
@@ -40,10 +41,12 @@ def Login():
     if password == "" or username == "" or postNumber == "":
         tk.messagebox.showerror("Error", "Please provide all the required information")
         return
-    mybot = bot.InstaBot(username, password, postNumber)
+    mybot = bot.InstaBot(username, password, int(postNumber), myUSERS, toCheck)
+    mybot.signIn()
+    mybot.like()
     print(username, password)
 
-def initilizeList():#Initilize with past elements from save.txt
+def initilizeList():#Initilize with past elements from users.txt
     for user in myUSERS:
         accountsList.insert(tk.END, user)
 
@@ -58,6 +61,7 @@ nmbrOfPostsEntry = tk.Entry(LoginInterface)
 tk.Label(LoginInterface, text="Username").grid(row=0)
 tk.Label(LoginInterface, text="Password").grid(row=1)
 tk.Label(LoginInterface, text="Number of posts to like").grid(row=2)
+tk.Checkbutton(LoginInterface, text = "Like only from the list", variable = toCheck).grid(row = 3)
 userEntry.grid(row=0, column=1)
 pwEntry.grid(row=1, column=1)
 nmbrOfPostsEntry.grid(row=2, column=1)
