@@ -4,10 +4,7 @@ import bot
 import os
 import string
 
-#TODO add delete button for item in list
-
 myUSERS = []
-toCheck = False #determines if the bot only likes posts from the users list
 
 def loadList(): #called in the initlization to load the users from the users.txt file
     if os.path.isfile("users.txt"):
@@ -41,7 +38,7 @@ def Login():
     if password == "" or username == "" or postNumber == "":
         tk.messagebox.showerror("Error", "Please provide all the required information")
         return
-    mybot = bot.InstaBot(username, password, int(postNumber), myUSERS, toCheck)
+    mybot = bot.InstaBot(username, password, int(postNumber), myUSERS, checkBtn._getboolean)
     mybot.signIn()
     mybot.like()
     print(username, password)
@@ -50,6 +47,12 @@ def initilizeList():#Initilize with past elements from users.txt
     for user in myUSERS:
         accountsList.insert(tk.END, user)
 
+def removeUser():
+    if accountsList.size() > 0:
+        temp = accountsList.get(tk.ACTIVE)
+        myUSERS.remove(temp)
+        accountsList.delete(tk.ACTIVE)
+        updateList()
 
 root = tk.Tk()
 
@@ -61,7 +64,8 @@ nmbrOfPostsEntry = tk.Entry(LoginInterface)
 tk.Label(LoginInterface, text="Username").grid(row=0)
 tk.Label(LoginInterface, text="Password").grid(row=1)
 tk.Label(LoginInterface, text="Number of posts to like").grid(row=2)
-tk.Checkbutton(LoginInterface, text = "Like only from the list", variable = toCheck).grid(row = 3)
+checkBtn = tk.Checkbutton(LoginInterface, text = "Like only from the list")
+checkBtn.grid(row = 3)
 userEntry.grid(row=0, column=1)
 pwEntry.grid(row=1, column=1)
 nmbrOfPostsEntry.grid(row=2, column=1)
@@ -76,6 +80,8 @@ accountEntry = tk.Entry(AccountsToLikeInterface)
 accountEntry.grid(row=1, column=0)
 addBtn = tk.Button(AccountsToLikeInterface, text="Add", command=addUser)
 addBtn.grid(row=1, column=1)
+removeBtn = tk.Button(AccountsToLikeInterface, text="Remove", command=removeUser)
+removeBtn.grid(row=1, column=2)
 root.update_idletasks()
 
 
