@@ -54,8 +54,26 @@ def removeUser():
         accountsList.delete(tk.ACTIVE)
         updateList()
 
+
+def saveData():
+    if userEntry.get().strip() == "" or pwEntry.get().strip() == "":
+        tkinter.messagebox.showerror("Error", "Please provide username and password")
+        return
+    data = userEntry.get() + ',' + pwEntry.get()
+    with open("data.txt", "w") as f:
+        f.write(data)
+
+def loadData():
+    if os.path.isfile("data.txt"):
+        with open("data.txt", 'r') as f:
+            tempData = f.read()
+        myData = tempData.split(',')
+        userEntry.insert(0, myData[0])
+        pwEntry.insert(0, myData[1])
+
 root = tk.Tk()
 root.title("AutoLike")
+
 #Creating and placing the login grid
 LoginInterface = tk.Frame(root)
 userEntry = tk.Entry(LoginInterface)
@@ -65,6 +83,8 @@ tk.Label(LoginInterface, text="Username").grid(row=0)
 tk.Label(LoginInterface, text="Password").grid(row=1)
 tk.Label(LoginInterface, text="Number of posts to like").grid(row=2)
 checkBtn = tk.Checkbutton(LoginInterface, text = "Like only from the list")
+saveDataBtn = tk.Button(LoginInterface, text="Save", command=saveData)
+saveDataBtn.grid(row = 1, column = 3)
 checkBtn.grid(row = 3)
 userEntry.grid(row=0, column=1)
 pwEntry.grid(row=1, column=1)
@@ -90,7 +110,7 @@ root.update_idletasks()
 AccountsToLikeInterface.place(x=0, y=LoginInterface.winfo_height())
 root.minsize(400, 400)
 
-
+loadData()
 loadList()
 initilizeList()
 root.mainloop()
