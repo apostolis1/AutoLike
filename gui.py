@@ -55,7 +55,7 @@ def removeUser():
         updateList()
 
 root = tk.Tk()
-
+root.title("AutoLike")
 #Creating and placing the login grid
 LoginInterface = tk.Frame(root)
 userEntry = tk.Entry(LoginInterface)
@@ -74,10 +74,10 @@ loginBtn.grid(row=3, column=1)
 
 #Accounts to like interface
 AccountsToLikeInterface = tk.Frame(root)
-accountsList = tk.Listbox(AccountsToLikeInterface)
-accountsList.grid(row=0, column=0)
+accountsList = tk.Listbox(AccountsToLikeInterface, width =40)
+accountsList.grid(row=0, column=0, columnspan=3)
 accountEntry = tk.Entry(AccountsToLikeInterface)
-accountEntry.grid(row=1, column=0)
+accountEntry.grid(row=1,column=0)
 addBtn = tk.Button(AccountsToLikeInterface, text="Add", command=addUser)
 addBtn.grid(row=1, column=1)
 removeBtn = tk.Button(AccountsToLikeInterface, text="Remove", command=removeUser)
@@ -91,8 +91,6 @@ AccountsToLikeInterface.place(x=0, y=LoginInterface.winfo_height())
 root.minsize(400, 400)
 
 
-
 loadList()
 initilizeList()
-
 root.mainloop()
