@@ -6,6 +6,7 @@ import string
 
 myUSERS = []
 
+
 def loadList(): #called in the initlization to load the users from the users.txt file
     if os.path.isfile("users.txt"):
         with open("users.txt", "r") as f:
@@ -33,15 +34,18 @@ def addUser():
 
 def Login():
     password = pwEntry.get()
+    global CheckVar
+    print(CheckVar.get())
     username = userEntry.get()
     postNumber = nmbrOfPostsEntry.get()
     if password == "" or username == "" or postNumber == "":
         tk.messagebox.showerror("Error", "Please provide all the required information")
         return
-    mybot = bot.InstaBot(username, password, int(postNumber), myUSERS, checkBtn._getboolean)
+    mybot = bot.InstaBot(username, password, int(postNumber), myUSERS, CheckVar.get())
     mybot.signIn()
     mybot.like()
     print(username, password)
+    print(CheckVar.get())
 
 def initilizeList():#Initilize with past elements from users.txt
     for user in myUSERS:
@@ -73,6 +77,7 @@ def loadData():
 
 root = tk.Tk()
 root.title("AutoLike")
+CheckVar = tkinter.IntVar()#Check the list of users or not
 
 #Creating and placing the login grid
 LoginInterface = tk.Frame(root)
@@ -82,7 +87,7 @@ nmbrOfPostsEntry = tk.Entry(LoginInterface)
 tk.Label(LoginInterface, text="Username").grid(row=0)
 tk.Label(LoginInterface, text="Password").grid(row=1)
 tk.Label(LoginInterface, text="Number of posts to like").grid(row=2)
-checkBtn = tk.Checkbutton(LoginInterface, text = "Like only from the list")
+checkBtn = tk.Checkbutton(LoginInterface, text = "Like only from the list", variable = CheckVar)
 saveDataBtn = tk.Button(LoginInterface, text="Save", command=saveData)
 saveDataBtn.grid(row = 1, column = 3)
 checkBtn.grid(row = 3)
