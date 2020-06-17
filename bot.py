@@ -44,9 +44,8 @@ class InstaBot:
         self.driver.find_element_by_xpath('//button[@type="submit"]').click()
         sleep(4)
         self.driver.find_element_by_xpath("/html/body/div[4]/div/div/div[3]/button[2]").click()
-        sleep(1)
-        sleep(2)
-        sleep(2)
+        sleep(5)
+
         #logged in and on the main page
 
     def like(self):
