@@ -8,4 +8,4 @@ Run the Gui.py file. Use a username and password to connect to your account. Thi
 
 # What libraries are used
 
-Mainly selenium (https://www.selenium.dev/) (so if you want to use it you have to download the webdrivers required for your browser version. It was tested with google chrome it worked perfectly) for the web automation part, and tkinter for the GUI
+Mainly selenium (https://www.selenium.dev/) with chrome Webdriver (so if you want to use it you have to download the webdrivers required for your google chrome browser version. It was tested with a previous version and it worked perfectly) for the web automation part, and tkinter for the GUI
