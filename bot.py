@@ -73,7 +73,9 @@ class InstaBot:
                             print("Liked one photo from", username)
         print("Proccess terminated succesfully. Liked" , likedPosts, "posts")
     
-    def __init__(self, us, pw, posts, extUsers, tocheck):#takes the username and password of the user as parameters
+    def __init__(self, us, pw, posts, extUsers, tocheck):'''The parameters are: username (string), password (string), number of posts to be checked (int),
+    a list of usernames whose posts the script will check if the option of specific users is enabled, a bool to determine if we only want to go through the posts
+    of specific users or like every post that is checked''' 
         self.NO_POSTS_TO_LIKE = posts #the number of top posts of the feed that we will look through
         self.CheckTheList = tocheck #determines if we look at specific usernames or all the posts
         self.password = pw
@@ -82,8 +84,6 @@ class InstaBot:
         self.usersToLike = []
         for user in extUsers:
             self.addUser(user)
-        for i in ["euroleague", "nba", "bleacherreport", "overtime"]:
-            self.addUser(i)
             
 if __name__ == "__main__":    
     mybot = InstaBot("", "", 1, [], True)
